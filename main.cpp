@@ -7,8 +7,6 @@
 
 using namespace std;
 
-using namespace std;
-
 template<typename E>
 class DoubleLinkedList;                      //forward declare the class
 

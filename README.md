@@ -1,11 +1,18 @@
 # DSA-Assignment
 
-Personal Note Keeper
 
-Functionalities:
+
+## Personal Note Keeper
+
+
+
+### Functionalities:
+
 Add, Search, Modify, Delete
 
 Spell Check
+
+
 
 AKHILESH GOWRISETTY
 

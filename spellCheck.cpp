@@ -1,47 +1,61 @@
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <unordered_set>
-#include <vector>
+#include <bits/stdc++.h>
+
+#include "spellCheck.h"
+unordered_set<string> myDict;
+
 using namespace std;
-
-bool
-spellCheck (const unordered_set <string> &dictionary, const string & word)
+void loadDict()
 {
-  return dictionary.count (word) != 0;
-}
-
-vector<string> spellCheck(const string &str,const unordered_set<string> &dictionary){
-    vector<string> wrong_words;
-    stringstream ss(str);
-    string word;
-    while(ss>>word){
-        if(!checkSpell(dictionary,word)){
-            wrong_words.push_back(word);
-        }
-    }
-    return wrong_words;
-}
-
-int main ()
-{
-//   string str="act actd acting";
     ifstream in;
-    in.open("Dictionary.txt");
+    in.open("dictionary.txt");
     string line;
     vector<string> myvector;
-    if(in.is_open()){
-        while(!in.eof()){
-            getline(in,line);
+    if (in.is_open())
+    {
+        while (!in.eof())
+        {
+            getline(in, line);
             myvector.push_back(line);
         }
         in.close();
     }
-    unordered_set<string> dict(myvector.begin(),myvector.end());
-    vector<string> ans = spellCheck(str,dict);
-    vector<string>::iterator it;
-    for(it=ans.begin();it!=ans.end();++it){
-        cout<<*it<<endl;
+    //unordered_set<string>
+    // myDict(myvector.begin(), myvector.end());
+
+    copy(myvector.begin(), myvector.end(), inserter(myDict, myDict.end()));
+}
+bool checkSpell(const string word)
+{
+    cout<<word<<endl;
+    // cout<<myDict.count(word)<<endl;
+
+    unordered_set<string>::iterator it = myDict.find(word);
+    if ( it == myDict.end()) {
+        cout<<"not found"<<endl;
     }
-  
+    return myDict.count(word) != 0;
+}
+
+vector<string> spellCheck(const string str)
+{
+    vector<string> wrong_words;
+    stringstream s(str);
+    string word;
+    while (s >> word)
+    {
+        if (!checkSpell(word))
+        {
+            wrong_words.push_back(word);
+        }
+    }
+
+    vector<string>::iterator it;
+    for (it = wrong_words.begin(); it != wrong_words.end(); ++it)
+    {
+        // temp.replace(temp.find(" " + (*it) + " "), (*it).length() + 2, " " + red + (*it) + reset + " ");
+        // temp.replace(temp.find(*it), (*it).length(),red+(*it)+reset);
+        // cout << *it << endl;
+    }
+
+    return wrong_words;
 }

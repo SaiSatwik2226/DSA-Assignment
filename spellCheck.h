@@ -1,10 +1,14 @@
 #ifndef SPELLCHECK_H
 #define SPELLCHECK_H
-#include<bits/stdc++.h>
 
 using namespace std;
 
+// unordered_set<string> myDict;
 
-//extern ahmaStruct ahmaCalc(bool x4,bool x3,bool x2,bool x1);
+void loadDict();
+
+bool checkSpell (const string word);
+
+vector<string> spellCheck(const string str);
 
 #endif 

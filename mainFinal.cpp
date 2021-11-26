@@ -1,95 +1,7 @@
 #include <bits/stdc++.h>
 #include <string.h>
 
-// #include "spellCheck.h"
-
 using namespace std;
-
-// void loadDict()
-// {
-//     ifstream in;
-//     in.open("Dictionary.txt");
-//     string line;
-//     vector<string> myvector;
-//     if (in.is_open())
-//     {
-//         while (!in.eof())
-//         {
-//             getline(in, line);
-//             // myvector.push_back(line);
-//             myDict.insert(line);
-//         }
-//         in.close();
-//     }
-//     //unordered_set<string>
-//     // myDict(myvector.begin(), myvector.end());
-
-//     // copy(myvector.begin(), myvector.end(), inserter(myDict, myDict.end()));
-//     unordered_set<string>::iterator it = myDict.begin();
-//     for (int i = 0; i < 10; i++)
-//     {
-//         cout<<(*it)<<endl;
-//         ++it;
-//     }
-    
-//     return;
-// }
-// bool checkSpell(const string word)
-// {
-//     cout<<word<<endl;
-//     // cout<<myDict.count(word)<<endl;
-
-//     unordered_set<string>::iterator it = myDict.find(word);
-//     if ( it == myDict.end()) {
-//         cout<<"not found"<<endl;
-//     }
-//     return myDict.count(word) != 0;
-// }
-
-// vector<string> spellCheck(const string str)
-// {
-//     vector<string> wrong_words;
-//     stringstream s(str);
-//     string word;
-//     while (s >> word)
-//     {
-//         if (!checkSpell(word))
-//         {
-//             wrong_words.push_back(word);
-//         }
-//     }
-
-//     vector<string>::iterator it;
-//     for (it = wrong_words.begin(); it != wrong_words.end(); ++it)
-//     {
-//         // temp.replace(temp.find(" " + (*it) + " "), (*it).length() + 2, " " + red + (*it) + reset + " ");
-//         // temp.replace(temp.find(*it), (*it).length(),red+(*it)+reset);
-//         // cout << *it << endl;
-//     }
-
-//     return wrong_words;
-// }
-
-bool checkSpell(const unordered_set<string> &dictionary, const string &word)
-{
-    return dictionary.count(word) != 0;
-}
-
-vector<string> spellCheck(const string str, const unordered_set<string> &dictionary)
-{
-    vector<string> wrong_words;
-    stringstream ss(str);
-    string word;
-    while (ss >> word)
-    {
-        if (!checkSpell(dictionary, word))
-        {
-            cout<<word<<endl;
-            wrong_words.push_back(word);
-        }
-    }
-    return wrong_words;
-}
 
 template <typename E>
 class DoubleLinkedList; //forward declare the class
@@ -360,44 +272,22 @@ void printChoices()
     cout << "6 : Exit the Note keeper\n";
 }
 
-void checkString(string temp,const unordered_set<string> &dictionary)
-{
-    // vector<string> mispelled = spellCheck(temp);
-    // if (mispelled.size() != 0)
-    // {
-    //     string red = "\033[31m";
-    //     string reset = "\033[0m";
-    //     // temp = " " + temp + " ";
-    //     vector<string>::iterator it;
-    //     for (it = mispelled.begin(); it != mispelled.end(); ++it)
-    //     {
-    //         // temp.replace(temp.find(" " + (*it) + " "), (*it).length() + 2, " " + red + (*it) + reset + " ");
-    //         temp.replace(temp.find(*it), (*it).length(),red+(*it)+reset);
-    //     }
-    //     cout<<temp<<endl;
-    // }
-    // vector<string>::iterator it;
-    //     for (it = mispelled.begin(); it != mispelled.end(); ++it)
-    //     {
-    //         // temp.replace(temp.find(" " + (*it) + " "), (*it).length() + 2, " " + red + (*it) + reset + " ");
-    //         // temp.replace(temp.find(*it), (*it).length(),red+(*it)+reset);
-    //         cout<<*it<<endl;
-    //     }
-        
-    vector<string> ans = spellCheck(temp, dictionary);
-    vector<string>::iterator it;
-    for (it = ans.begin(); it != ans.end(); ++it)
-    {
-        cout << *it << endl;
-    }
-    return;
-}
 
-int main()
-{
-    DoubleLinkedList<string> notesKeeper;
-    // loadDict();
-    
+
+class Dictionary
+{ // a singly linked list
+public:
+    Dictionary();                    // empty list constructor
+    ~Dictionary();
+
+    unordered_set<string> dict;
+
+    bool checkSpell(const unordered_set<string> &dictionary, const string &word);
+    vector<string> spellCheck(const string str, const unordered_set<string> &dictionary);
+    void checkString(string *temp,unordered_set<string> &dictionary);
+};
+
+Dictionary::Dictionary(){
     ifstream in;
     in.open("dictionary.txt");
     string line;
@@ -411,13 +301,72 @@ int main()
         }
         in.close();
     }
-    unordered_set<string> dict(myvector.begin(), myvector.end());
-    // vector<string> ans = spellCheck(str, dict);
-    // vector<string>::iterator it;
-    // for (it = ans.begin(); it != ans.end(); ++it)
-    // {
-    //     cout << *it << endl;
-    // }
+    copy(myvector.begin(), myvector.end(), inserter(dict, dict.end()));
+}
+
+Dictionary::~Dictionary(){
+    dict.clear();
+}
+
+
+bool Dictionary::checkSpell(const unordered_set<string> &dictionary, const string &word)
+{
+    return dictionary.count(word) != 0;
+}
+
+vector<string> Dictionary::spellCheck(const string str, const unordered_set<string> &dictionary)
+{
+    vector<string> wrong_words;
+    stringstream ss(str);
+    string word;
+    while (ss >> word)
+    {
+        if (!checkSpell(dictionary, word))
+        {
+            cout<<word<<endl;
+            wrong_words.push_back(word);
+        }
+    }
+    return wrong_words;
+}
+
+void Dictionary::checkString(string *temp,unordered_set<string> &dictionary)
+{        
+    vector<string> ans = spellCheck(*temp, dictionary);
+    vector<string>::iterator it;
+    if(!ans.empty())
+    {
+        cout<<"The Following words are wrong:"<<endl;
+        for (it = ans.begin(); it != ans.end(); ++it)
+        {
+            cout << *it << endl;
+            string corrected="";
+            do
+            {
+                cout<<"1.Replace(Enter the correct one)\n2.Add to Dictionary"<<endl;
+                int in;
+                cin>>in;
+                if(in==1){
+                    cin>>corrected;                    
+                }
+                else {
+                    dictionary.insert(*it);
+                    break;
+                }
+            } while (!checkSpell(dict,corrected));
+
+            (*temp).replace((*temp).find(*it), (*it).length(), corrected);
+        }
+    }
+    return;
+}
+
+int main()
+{
+    DoubleLinkedList<string> notesKeeper;
+
+    Dictionary d;
+
     int choice = 0;
     while (choice != 6)
     {
@@ -432,8 +381,8 @@ int main()
             getline(cin >> ws, tag, '\n');
             cout << "Enter the Data: ";
             getline(cin >> ws, data);
-            // data = "zoo";
-            checkString(data,dict);
+            d.checkString(&data,d.dict);
+            cout<<"Updated: "<<data<<endl;
             notesKeeper.addBack(tag, data);
             break;
         }

@@ -5,9 +5,9 @@ using namespace std;
 
 
 class Dictionary
-{ // a singly linked list
+{
 public:
-    Dictionary();                    // empty list constructor
+    Dictionary();
     ~Dictionary();
 
     unordered_set<string> dict;

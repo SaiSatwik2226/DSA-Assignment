@@ -25,7 +25,7 @@ vector<string> spellCheck(const string &str,const unordered_set<string> &diction
 
 int main ()
 {
-  string str="act actd acting";
+//   string str="act actd acting";
     ifstream in;
     in.open("Dictionary.txt");
     string line;

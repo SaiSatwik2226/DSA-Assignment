@@ -1,5 +1,7 @@
 #include<bits/stdc++.h>
 
+#include<iostream>
+
 using namespace std;
 
 class PersonalNoteKeeper {				        // a singly linked list
@@ -12,7 +14,7 @@ public:
     void search(string t);                 // Search the element
     void modify(string t);                 // Modify the element
     void deleteNote(string t);             // Deletstring the element
-    void add(unordered_map* v, const string& t,const string& d);		// insert new node before v
+    void add(unordered_map<string,string>* v, const string& t,const string& d);		// insert new node before v
 };
 
 
@@ -30,7 +32,7 @@ PersonalNoteKeeper::~PersonalNoteKeeper()			// destructor
 }
 
 
-void PersonalNoteKeeper::add(unordered_map* v, const string& t, const string& d)		// insert new node before v
+void PersonalNoteKeeper::add(unordered_map<string,string>* v, const string& t, const string& d)		// insert new node before v
 {
 
 }
@@ -44,8 +46,8 @@ void PersonalNoteKeeper::search(string t){
 }
 
 void PersonalNoteKeeper::modify(string t){
-    noteKeeper[t]
-    if (//if present)
+    // noteKeeper[t];
+    if(true)//if present)
     {
         cout<<"What do you want to modify?\n";
         cout<<"1.Tag\n2.Data";
@@ -53,32 +55,30 @@ void PersonalNoteKeeper::modify(string t){
         cin>>option;
         string update;
         if(option){
-            cout<<"Enter the updated Tag:\n"
+            cout<<"Enter the updated Tag:\n";
 
         }
         else
         {
             cout<<"Enter the updated Data:\n";
             cin>>update;
-            modifyElement->data = update;
         }
     }
     else//absent
     {
-        cout<<"Data with that particular tag isn't available\n"
+        cout<<"Data with that particular tag isn't available\n";
     }    
-    return modifyElement;
 }
 
 void PersonalNoteKeeper::deleteNote(string t){
     noteKeeper[t];
-    if (//delete if present)
+    if (true)//delete if present)
     {
 
     }
     else//absent
     {
-        cout<<"Data with that particular tag isn't available\n"
+        cout<<"Data with that particular tag isn't available\n";
     }
     
     return;
@@ -106,19 +106,15 @@ int main(){
                 cout<<"Enter thstring tag followed by the Data\n";
                 cin>>tag;
                 cin>>data;
-                sll.addFront(tag,data);
                 break;
             }
             case 2:{
                 string t;
                 cout<<"Enter thstring tag please:\n";
                 cin>>t;
-                DNode<string>* point =  sll.search(t);
-                if (point!=NULL)
+                if (true)
                 {
-                    cout<<point->tag;
                     cout<<"\n";
-                    cout<<point->data;
                 }
                 else
                 {
@@ -130,17 +126,14 @@ int main(){
                 string t;
                 cout<<"Enter thstring tag please:\n";
                 cin>>t;
-                sll.deleteNote(t);
                 break;
             }
             case 4:{
                 string t;
                 cout<<"Enter thstring tag please:\n";
                 cin>>t;
-                sll.modify(t);
                 break;}
             case 5:{
-                sll.traverse();
                 break;}
             case 6:{
                 cout<<"Exiting";

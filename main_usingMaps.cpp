@@ -4,79 +4,173 @@
 
 using namespace std;
 
-class PersonalNoteKeeper {				        // a singly linked list
+class Dictionary
+{ // a singly linked list
+public:
+    Dictionary();                    // empty list constructor
+    ~Dictionary();
+
+    unordered_set<string> dict;
+
+    bool checkSpell(const unordered_set<string> &dictionary, const string &word);
+    vector<string> spellCheck(const string str, const unordered_set<string> &dictionary);
+    void checkString(string *temp,unordered_set<string> &dictionary);
+};
+
+Dictionary::Dictionary(){
+    ifstream in;
+    in.open("dictionary.txt");
+    string line;
+    vector<string> myvector;
+    if (in.is_open())
+    {
+        while (!in.eof())
+        {
+            getline(in, line);
+            myvector.push_back(line);
+        }
+        in.close();
+    }
+    copy(myvector.begin(), myvector.end(), inserter(dict, dict.end()));
+}
+
+Dictionary::~Dictionary(){
+    dict.clear();
+}
+
+
+bool Dictionary::checkSpell(const unordered_set<string> &dictionary, const string &word)
+{
+    return dictionary.count(word) != 0;
+}
+
+vector<string> Dictionary::spellCheck(const string str, const unordered_set<string> &dictionary)
+{
+    vector<string> wrong_words;
+    stringstream ss(str);
+    string word;
+    while (ss >> word)
+    {
+        if (!checkSpell(dictionary, word))
+        {
+            cout<<word<<endl;
+            wrong_words.push_back(word);
+        }
+    }
+    return wrong_words;
+}
+
+void Dictionary::checkString(string *temp,unordered_set<string> &dictionary)
+{        
+    vector<string> ans = spellCheck(*temp, dictionary);
+    vector<string>::iterator it;
+    if(!ans.empty())
+    {
+        cout<<"The Following words are wrong:"<<endl;
+        for (it = ans.begin(); it != ans.end(); ++it)
+        {
+            cout << *it << endl;
+            string corrected="";
+            do
+            {
+                cout<<"1.Replace(Enter the correct one)\n2.Add to Dictionary"<<endl;
+                int in;
+                cin>>in;
+                if(in==1){
+                    cin>>corrected;                    
+                }
+                else {
+                    dictionary.insert(*it);
+                    break;
+                }
+            } while (!checkSpell(dict,corrected));
+
+            (*temp).replace((*temp).find(*it), (*it).length(), corrected);
+        }
+    }
+    return;
+}
+
+
+class PersonalNoteKeeper {
 public:
     unordered_map<string,string> noteKeeper;
-    PersonalNoteKeeper();				        // empty list constructor
-    ~PersonalNoteKeeper();				        // destructor
     bool empty() const;				    // is list empty?
     void traverse();                    // traversstring the list
     void search(string t);                 // Search the element
     void modify(string t);                 // Modify the element
-    void deleteNote(string t);             // Deletstring the element
-    void add(unordered_map<string,string>* v, const string& t,const string& d);		// insert new node before v
+    void deleteNote(string t);             // Delete string the element
+    void add(const string& t,const string& d);
 };
-
 
 bool PersonalNoteKeeper::empty() const		// is list empty?
 {   
-
+    return noteKeeper.empty();
 }
 
-
-
-
-PersonalNoteKeeper::~PersonalNoteKeeper()			// destructor
+void PersonalNoteKeeper::add(const string& t, const string& d)
 {
-    
-}
-
-
-void PersonalNoteKeeper::add(unordered_map<string,string>* v, const string& t, const string& d)		// insert new node before v
-{
-
+    noteKeeper.insert(t,d);
 }
 
 void PersonalNoteKeeper::traverse(){
-
+    unordered_map<string,string>::iterator it = noteKeeper.begin();
+    for (; it != noteKeeper.end() ; ++it)
+    {
+        cout<<"Tag: "<<(*it).first<<"\t"<<"Data: "<<(*it).second<<endl;
+    }
+    return;
 }
 
 void PersonalNoteKeeper::search(string t){
-
+    if(noteKeeper.count(t)){
+        unordered_map<string,string>::iterator it = noteKeeper.find(t);
+        cout<<"Tag: "<<(*it).first<<"\t"<<"Data: "<<(*it).second<<endl;
+    }
+    else{
+        cout<<"Element with that tag not found!"<<endl;
+    }
 }
 
 void PersonalNoteKeeper::modify(string t){
-    // noteKeeper[t];
-    if(true)//if present)
+    Dictionary d;
+    if(noteKeeper.count(t))
     {
+        unordered_map<string,string>::iterator it = noteKeeper.find(t);
         cout<<"What do you want to modify?\n";
         cout<<"1.Tag\n2.Data";
         int option=0;
         cin>>option;
         string update;
-        if(option){
+        if(option==1){
             cout<<"Enter the updated Tag:\n";
-
+            getline(cin >> ws, update);
+            d.checkString(&update,d.dict);
+            string data = (*it).second;
+            noteKeeper.insert(update,data);
         }
         else
         {
             cout<<"Enter the updated Data:\n";
-            cin>>update;
+            getline(cin >> ws, update);
+            d.checkString(&update,d.dict);
+            (*it).second = update;
         }
+        cout << "Data Updated successfully!!" << endl;
     }
-    else//absent
+    else
     {
         cout<<"Data with that particular tag isn't available\n";
     }    
 }
 
 void PersonalNoteKeeper::deleteNote(string t){
-    noteKeeper[t];
-    if (true)//delete if present)
+    if (noteKeeper.count(t))
     {
-
+        unordered_map<string,string>::iterator it = noteKeeper.find(t);
+        noteKeeper.erase((*it).first);
     }
-    else//absent
+    else
     {
         cout<<"Data with that particular tag isn't available\n";
     }
@@ -88,52 +182,56 @@ void printChoices(){
     cout<<"Enter your choice please:\n";
     cout<<"1 : Add a new Note\n";
     cout<<"2 : Search the Note\n";
-    cout<<"3 : Deletstring the Note\n";
+    cout<<"3 : Delete string the Note\n";
     cout<<"4 : Modify the Note\n";
-    cout<<"5 : Travesstring the Notes\n";
+    cout<<"5 : Travese string the Notes\n";
     cout<<"6 : Exit the Note keeper\n";
 }
 
 int main(){
     
+    PersonalNoteKeeper pNotesKeeper;
+
+    Dictionary d;
+
     int choice = 0;
     while(choice != 6){
         printChoices();
         cin>>choice;
         switch(choice){
             case 1:{
-                string tag,data;
-                cout<<"Enter thstring tag followed by the Data\n";
-                cin>>tag;
-                cin>>data;
+                string tag, data;
+                cout << "Enter the Tag: ";
+                getline(cin >> ws, tag, '\n');
+                d.checkString(&tag,d.dict);
+                cout << "Enter the Data: ";
+                getline(cin >> ws, data);
+                d.checkString(&data,d.dict);
+                pNotesKeeper.add(tag, data);
                 break;
             }
             case 2:{
-                string t;
-                cout<<"Enter thstring tag please:\n";
-                cin>>t;
-                if (true)
-                {
-                    cout<<"\n";
-                }
-                else
-                {
-                    cout<<"Note not found!\n";
-                }
+                string tag;
+                cout<<"Enter the tag please:\n";
+                getline(cin >> ws, tag, '\n');
+                pNotesKeeper.search(tag);
                 break;
             }
             case 3:{
-                string t;
-                cout<<"Enter thstring tag please:\n";
-                cin>>t;
+                string tag;
+                cout<<"Enter the tag please:\n";
+                getline(cin >> ws, tag, '\n');
+                pNotesKeeper.deleteNote(tag);
                 break;
             }
             case 4:{
-                string t;
-                cout<<"Enter thstring tag please:\n";
-                cin>>t;
+                string tag;
+                cout<<"Enter the tag please:\n";
+                getline(cin >> ws, tag, '\n');
+                pNotesKeeper.modify(tag);
                 break;}
             case 5:{
+                pNotesKeeper.traverse();
                 break;}
             case 6:{
                 cout<<"Exiting";

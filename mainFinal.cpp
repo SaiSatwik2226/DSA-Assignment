@@ -3,6 +3,95 @@
 
 using namespace std;
 
+
+class Dictionary
+{ // a singly linked list
+public:
+    Dictionary();                    // empty list constructor
+    ~Dictionary();
+
+    unordered_set<string> dict;
+
+    bool checkSpell(const unordered_set<string> &dictionary, const string &word);
+    vector<string> spellCheck(const string str, const unordered_set<string> &dictionary);
+    void checkString(string *temp,unordered_set<string> &dictionary);
+};
+
+Dictionary::Dictionary(){
+    ifstream in;
+    in.open("dictionary.txt");
+    string line;
+    vector<string> myvector;
+    if (in.is_open())
+    {
+        while (!in.eof())
+        {
+            getline(in, line);
+            myvector.push_back(line);
+        }
+        in.close();
+    }
+    copy(myvector.begin(), myvector.end(), inserter(dict, dict.end()));
+}
+
+Dictionary::~Dictionary(){
+    dict.clear();
+}
+
+
+bool Dictionary::checkSpell(const unordered_set<string> &dictionary, const string &word)
+{
+    return dictionary.count(word) != 0;
+}
+
+vector<string> Dictionary::spellCheck(const string str, const unordered_set<string> &dictionary)
+{
+    vector<string> wrong_words;
+    stringstream ss(str);
+    string word;
+    while (ss >> word)
+    {
+        if (!checkSpell(dictionary, word))
+        {
+            cout<<word<<endl;
+            wrong_words.push_back(word);
+        }
+    }
+    return wrong_words;
+}
+
+void Dictionary::checkString(string *temp,unordered_set<string> &dictionary)
+{        
+    vector<string> ans = spellCheck(*temp, dictionary);
+    vector<string>::iterator it;
+    if(!ans.empty())
+    {
+        cout<<"The Following words are wrong:"<<endl;
+        for (it = ans.begin(); it != ans.end(); ++it)
+        {
+            cout << *it << endl;
+            string corrected="";
+            do
+            {
+                cout<<"1.Replace(Enter the correct one)\n2.Add to Dictionary"<<endl;
+                int in;
+                cin>>in;
+                if(in==1){
+                    cin>>corrected;                    
+                }
+                else {
+                    dictionary.insert(*it);
+                    break;
+                }
+            } while (!checkSpell(dict,corrected));
+
+            (*temp).replace((*temp).find(*it), (*it).length(), corrected);
+        }
+    }
+    return;
+}
+
+
 template <typename E>
 class DoubleLinkedList; //forward declare the class
 
@@ -203,7 +292,7 @@ template <typename E>
 void DoubleLinkedList<E>::modify(E t)
 {
     DNode<E> *modifyElement = search(t);
-
+    Dictionary d;
     if (modifyElement != NULL)
     {
         cout << "What do you want to modify?\n";
@@ -215,12 +304,14 @@ void DoubleLinkedList<E>::modify(E t)
         {
             cout << "Enter the updated Tag:\n";
             getline(cin >> ws, update);
+            d.checkString(&update,d.dict);
             modifyElement->tag = update;
         }
         else
         {
             cout << "Enter the updated Data:\n";
             getline(cin >> ws, update);
+            d.checkString(&update,d.dict);
             modifyElement->data = update;
         }
         cout << "Data Updated successfully!!" << endl;
@@ -272,95 +363,6 @@ void printChoices()
     cout << "6 : Exit the Note keeper\n";
 }
 
-
-
-class Dictionary
-{ // a singly linked list
-public:
-    Dictionary();                    // empty list constructor
-    ~Dictionary();
-
-    unordered_set<string> dict;
-
-    bool checkSpell(const unordered_set<string> &dictionary, const string &word);
-    vector<string> spellCheck(const string str, const unordered_set<string> &dictionary);
-    void checkString(string *temp,unordered_set<string> &dictionary);
-};
-
-Dictionary::Dictionary(){
-    ifstream in;
-    in.open("dictionary.txt");
-    string line;
-    vector<string> myvector;
-    if (in.is_open())
-    {
-        while (!in.eof())
-        {
-            getline(in, line);
-            myvector.push_back(line);
-        }
-        in.close();
-    }
-    copy(myvector.begin(), myvector.end(), inserter(dict, dict.end()));
-}
-
-Dictionary::~Dictionary(){
-    dict.clear();
-}
-
-
-bool Dictionary::checkSpell(const unordered_set<string> &dictionary, const string &word)
-{
-    return dictionary.count(word) != 0;
-}
-
-vector<string> Dictionary::spellCheck(const string str, const unordered_set<string> &dictionary)
-{
-    vector<string> wrong_words;
-    stringstream ss(str);
-    string word;
-    while (ss >> word)
-    {
-        if (!checkSpell(dictionary, word))
-        {
-            cout<<word<<endl;
-            wrong_words.push_back(word);
-        }
-    }
-    return wrong_words;
-}
-
-void Dictionary::checkString(string *temp,unordered_set<string> &dictionary)
-{        
-    vector<string> ans = spellCheck(*temp, dictionary);
-    vector<string>::iterator it;
-    if(!ans.empty())
-    {
-        cout<<"The Following words are wrong:"<<endl;
-        for (it = ans.begin(); it != ans.end(); ++it)
-        {
-            cout << *it << endl;
-            string corrected="";
-            do
-            {
-                cout<<"1.Replace(Enter the correct one)\n2.Add to Dictionary"<<endl;
-                int in;
-                cin>>in;
-                if(in==1){
-                    cin>>corrected;                    
-                }
-                else {
-                    dictionary.insert(*it);
-                    break;
-                }
-            } while (!checkSpell(dict,corrected));
-
-            (*temp).replace((*temp).find(*it), (*it).length(), corrected);
-        }
-    }
-    return;
-}
-
 int main()
 {
     DoubleLinkedList<string> notesKeeper;
@@ -379,10 +381,10 @@ int main()
             string tag, data;
             cout << "Enter the Tag: ";
             getline(cin >> ws, tag, '\n');
+            d.checkString(&tag,d.dict);
             cout << "Enter the Data: ";
             getline(cin >> ws, data);
             d.checkString(&data,d.dict);
-            cout<<"Updated: "<<data<<endl;
             notesKeeper.addBack(tag, data);
             break;
         }

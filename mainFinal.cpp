@@ -569,6 +569,7 @@ int main()
         case 7:
         {
             notesKeeper.saveFile();
+            exit(0);
             break;
         }
         default:

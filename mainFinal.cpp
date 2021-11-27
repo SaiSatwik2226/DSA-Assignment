@@ -1,8 +1,12 @@
 #include <bits/stdc++.h>
 #include <string.h>
+#include <fstream>
+#include <iostream>
+
+#include <sys/stat.h>
+#include <unistd.h>
 
 using namespace std;
-
 
 class Dictionary
 {
@@ -12,12 +16,15 @@ public:
 
     unordered_set<string> dict;
 
+    void addToDictionary(string s);
+
     bool checkSpell(const unordered_set<string> &dictionary, const string &word);
     vector<string> spellCheck(const string str, const unordered_set<string> &dictionary);
-    void checkString(string *temp,unordered_set<string> &dictionary);
+    void checkString(string *temp, unordered_set<string> &dictionary);
 };
 
-Dictionary::Dictionary(){
+Dictionary::Dictionary()
+{
     ifstream in;
     in.open("dictionary.txt");
     string line;
@@ -34,10 +41,18 @@ Dictionary::Dictionary(){
     copy(myvector.begin(), myvector.end(), inserter(dict, dict.end()));
 }
 
-Dictionary::~Dictionary(){
+Dictionary::~Dictionary()
+{
     dict.clear();
 }
 
+void Dictionary::addToDictionary(string s)
+{
+    ofstream outfile;
+    outfile.open("dictionary.txt", ios_base::app); // append instead of overwrite
+    outfile << s;
+    return;
+}
 
 bool Dictionary::checkSpell(const unordered_set<string> &dictionary, const string &word)
 {
@@ -53,44 +68,54 @@ vector<string> Dictionary::spellCheck(const string str, const unordered_set<stri
     {
         if (!checkSpell(dictionary, word))
         {
-            cout<<word<<endl;
+            cout << word << endl;
             wrong_words.push_back(word);
         }
     }
     return wrong_words;
 }
 
-void Dictionary::checkString(string *temp,unordered_set<string> &dictionary)
-{        
+void Dictionary::checkString(string *temp, unordered_set<string> &dictionary)
+{
     vector<string> ans = spellCheck(*temp, dictionary);
     vector<string>::iterator it;
-    if(!ans.empty())
+    if (!ans.empty())
     {
-        cout<<"The Following words are wrong:"<<endl;
+        cout << "The Following words are wrong:" << endl;
         for (it = ans.begin(); it != ans.end(); ++it)
         {
             cout << *it << endl;
-            string corrected="";
+            string corrected = "";
             do
             {
-                cout<<"1.Replace(Enter the correct one)\n2.Add to Dictionary"<<endl;
+                cout << "1.Replace(Enter the correct one)\n2.Add to Dictionary" << endl;
                 int in;
-                cin>>in;
-                if(in==1){
-                    cin>>corrected;                    
+                cin >> in;
+                if (in == 1)
+                {
+                    cin >> corrected;
                 }
-                else {
+                else
+                {
                     dictionary.insert(*it);
+                    string choice = "";
+                    do
+                    {
+                        cout << "Save it to dictionary?(Y/N)" << endl;
+                        cin >> choice;
+                        if (choice == "Y" || "y")
+                            addToDictionary(*it);
+
+                    } while (choice != "Y" || "y" || "N" || "n");
                     break;
                 }
-            } while (!checkSpell(dict,corrected));
+            } while (!checkSpell(dict, corrected));
 
             (*temp).replace((*temp).find(*it), (*it).length(), corrected);
         }
     }
     return;
 }
-
 
 template <typename E>
 class DoubleLinkedList; //forward declare the class
@@ -126,6 +151,9 @@ public:
     DNode<E> *search(E t);                         // Search the element
     void modify(E t);                              // Modify the element
     void deleteNote(E t);                          // Delete the element
+    void saveFile();
+    void loadFile();
+
 private:
     DNode<E> *header; // head of the list
     DNode<E> *trailer;
@@ -304,14 +332,14 @@ void DoubleLinkedList<E>::modify(E t)
         {
             cout << "Enter the updated Tag:\n";
             getline(cin >> ws, update);
-            d.checkString(&update,d.dict);
+            d.checkString(&update, d.dict);
             modifyElement->tag = update;
         }
         else
         {
             cout << "Enter the updated Data:\n";
             getline(cin >> ws, update);
-            d.checkString(&update,d.dict);
+            d.checkString(&update, d.dict);
             modifyElement->data = update;
         }
         cout << "Data Updated successfully!!" << endl;
@@ -352,6 +380,107 @@ void DoubleLinkedList<E>::deleteNote(E t)
     return;
 }
 
+template <typename E>
+void DoubleLinkedList<E>::saveFile()
+{
+
+    string choice = "";
+    do
+    {
+        if (empty())
+        {
+            cout << "Empty Notes nothing to Save, Exiting" << endl;
+            return;
+        }
+        cout << "Do you want to save the file?(Y/N): ";
+        getline(cin>>ws, choice);
+        if(choice == "N" || "n")
+        {
+            cout << "Exiting,\nThank you" << endl;
+            return;
+        }
+        else if (choice == "Y" || "y")
+        {
+            cout<<choice<<endl;
+            ofstream myfile;
+            cout << "Enter file name to be saved as: ";
+            string name;
+            getline(cin >> ws, name);
+            name = name + ".csv";
+            myfile.open(name, ios::in | ios::app);
+            myfile << "Tag,Data\n";
+            DNode<E> *temp = header;
+            while (temp != NULL && !empty())
+            {
+                myfile << temp->tag << "," << temp->data << "\n";
+                temp = temp->next;
+                cout << "saving.." << endl;
+            }
+            cout << "Done! Thank you" << endl;
+            myfile.close();
+            return;
+        }
+    } while (choice != "Y" || "y" || "N" || "n");
+    return;
+}
+
+template <typename E>
+void DoubleLinkedList<E>::loadFile()
+{
+    string choice = "";
+    cout << "File Name (.csv only): ";
+        getline(cin >> ws, choice);
+    if (choice.find(".csv") == string::npos)
+        choice = choice + ".csv";
+    if (!fopen(choice.c_str(), "r"))
+    {
+        cout << "No File named: " << choice << ", Please restart the steps!!" << endl;
+        return;
+    }
+    cout << "Loaded" << endl;
+
+    do
+    {
+        if (empty())
+        {
+            break;
+        }
+        cout<<"Do you want to append the notes to old one or load as a new file(Y/N): ";
+        string load;
+        getline(cin>>ws, load);
+        if (choice == "Y" || "y" && choice != "N" || "n")
+        {
+            break;
+        }
+        else if(choice == "N" || "n")
+        {
+            while (!(empty()))
+            {
+                removeFront();
+            }
+        }
+    } while (choice != "Y" || "y" || "N" || "n");
+
+    ifstream myfile;
+    myfile.open(choice);
+    string line;
+    if (myfile.is_open())
+    {
+        getline(myfile, line);
+        line = "";
+        while (!myfile.eof())
+        {
+            getline(myfile, line);
+            string tag, data;
+            tag = line.substr(0, line.find(","));
+            data = line.substr(line.find(",") + 1, line.length());
+            addBack(tag, data);
+        }
+        myfile.close();
+    }
+    return;
+}
+
 void printChoices()
 {
     cout << "Enter your choice please:\n";
@@ -360,7 +489,8 @@ void printChoices()
     cout << "3 : Delete the Note\n";
     cout << "4 : Modify the Note\n";
     cout << "5 : Travese the Notes\n";
-    cout << "6 : Exit the Note keeper\n";
+    cout << "6 : Load previous Notes File\n";
+    cout << "7 : Exit the Note keeper\n";
 }
 
 int main()
@@ -381,10 +511,10 @@ int main()
             string tag, data;
             cout << "Enter the Tag: ";
             getline(cin >> ws, tag, '\n');
-            d.checkString(&tag,d.dict);
+            d.checkString(&tag, d.dict);
             cout << "Enter the Data: ";
             getline(cin >> ws, data);
-            d.checkString(&data,d.dict);
+            d.checkString(&data, d.dict);
             notesKeeper.addBack(tag, data);
             break;
         }
@@ -424,7 +554,12 @@ int main()
         }
         case 6:
         {
-            cout << "Exiting"<<endl;
+            notesKeeper.loadFile();
+            break;
+        }
+        case 7:
+        {
+            notesKeeper.saveFile();
             break;
         }
         default:

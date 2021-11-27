@@ -413,7 +413,7 @@ void DoubleLinkedList<E>::saveFile()
             string name;
             getline(cin >> ws, name);
             name = name + ".csv";
-            myfile.open(name, ios::in | ios::app);  //open for input operations as well as for appending at eof
+            myfile.open(name, ios::in | ios::trunc);  //open for input operations as well as for appending at eof
             myfile << "Tag,Data\n";
             DNode<E> *temp = header;
             

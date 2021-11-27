@@ -101,7 +101,7 @@ void Dictionary::checkString(string *temp, unordered_set<string> &dictionary)
                     string choice = "";
                     do
                     {
-                        cout << "Save it to dictionary?(Y/N)" << endl;
+                        cout << "Save it to dictionary.txt?(Y/N)" << endl;
                         cin >> choice;
                         if (choice == "Y" || "y")
                             addToDictionary(*it);
@@ -410,11 +410,13 @@ void DoubleLinkedList<E>::saveFile()
             myfile.open(name, ios::in | ios::app);
             myfile << "Tag,Data\n";
             DNode<E> *temp = header;
+            
+            cout << "saving.." << endl;
+
             while (temp != NULL && !empty())
             {
                 myfile << temp->tag << "," << temp->data << "\n";
                 temp = temp->next;
-                cout << "saving.." << endl;
             }
             cout << "Done! Thank you" << endl;
             myfile.close();

@@ -50,7 +50,7 @@ void Dictionary::addToDictionary(string s)
 {
     ofstream outfile;
     outfile.open("dictionary.txt", ios_base::app); // append instead of overwrite
-    outfile << s;
+    outfile << "\n"<<s;
     return;
 }
 

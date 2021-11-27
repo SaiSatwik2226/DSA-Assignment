@@ -44,7 +44,7 @@ void Dictionary::addToDictionary(string s)
 {
     ofstream outfile;
     outfile.open("dictionary.txt", ios_base::app); // append instead of overwrite
-    outfile << s;
+    outfile <<"\n"<< s;
     return;
 }
 
@@ -365,6 +365,7 @@ int main(){
             case 7:
             {
                 pNotesKeeper.saveFile();
+                exit(0);
                 break;
             }
             default:{

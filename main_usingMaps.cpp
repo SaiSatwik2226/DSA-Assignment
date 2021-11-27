@@ -95,16 +95,16 @@ void Dictionary::checkString(string *temp,unordered_set<string> &dictionary)
                     {
                         cout << "Save it to dictionary.txt?(Y/N)" << endl;
                         cin >> choice;
-                        if (choice == "Y" || "y")
+                        if (choice == "Y" || choice== "y")
                         {
                             addToDictionary(*it);
                             break;
                             }
-                        else if(choice == "N"||"n")
+                        else if(choice == "N"|| choice=="n")
                         {
                             break;
                         }
-                    } while (choice != "Y" || "y" || "N" || "n");
+                    } while (choice != "Y" || choice!= "y" || choice!= "N" ||choice!= "n");
                     break;
                 }
             } while (!checkSpell(dict,corrected));
@@ -226,16 +226,16 @@ void PersonalNoteKeeper::loadFile(){
         cout<<"Do you want to append the notes to old one or load as a new file(Y/N): ";
         string load;
         getline(cin>>ws, load);
-        if (choice == "Y" || "y" && choice != "N" || "n")
+        if (choice == "Y" || choice== "y" && choice != "N" || choice!= "n")
         {
             break;
         }
-        else if(choice == "N" || "n")
+        else if(choice == "N" || choice== "n")
         {
             noteKeeper.clear();
             break;
         }
-    } while (choice != "Y" || "y" || "N" || "n");
+    } while (choice != "Y" || choice!= "y" || choice!= "N" || choice!= "n");
 
     ifstream myfile;
     myfile.open(choice);

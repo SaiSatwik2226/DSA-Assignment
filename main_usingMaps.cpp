@@ -110,14 +110,14 @@ bool PersonalNoteKeeper::empty() const		// is list empty?
 
 void PersonalNoteKeeper::add(const string& t, const string& d)
 {
-    noteKeeper.insert(t,d);
+    noteKeeper.insert({t,d});
 }
 
 void PersonalNoteKeeper::traverse(){
     unordered_map<string,string>::iterator it = noteKeeper.begin();
     for (; it != noteKeeper.end() ; ++it)
     {
-        cout<<"Tag: "<<(*it).first<<"\t"<<"Data: "<<(*it).second<<endl;
+        cout<<"Tag: "<<it->first<<"\t"<<"Data: "<<it->second<<endl;
     }
     return;
 }
@@ -125,7 +125,7 @@ void PersonalNoteKeeper::traverse(){
 void PersonalNoteKeeper::search(string t){
     if(noteKeeper.count(t)){
         unordered_map<string,string>::iterator it = noteKeeper.find(t);
-        cout<<"Tag: "<<(*it).first<<"\t"<<"Data: "<<(*it).second<<endl;
+        cout<<"Tag: "<<it->first<<"\t"<<"Data: "<<it->second<<endl;
     }
     else{
         cout<<"Element with that tag not found!"<<endl;
@@ -146,15 +146,15 @@ void PersonalNoteKeeper::modify(string t){
             cout<<"Enter the updated Tag:\n";
             getline(cin >> ws, update);
             d.checkString(&update,d.dict);
-            string data = (*it).second;
-            noteKeeper.insert(update,data);
+            string data = it->second;
+            noteKeeper.insert({update,data});
         }
         else
         {
             cout<<"Enter the updated Data:\n";
             getline(cin >> ws, update);
             d.checkString(&update,d.dict);
-            (*it).second = update;
+            it->second = update;
         }
         cout << "Data Updated successfully!!" << endl;
     }
@@ -168,7 +168,7 @@ void PersonalNoteKeeper::deleteNote(string t){
     if (noteKeeper.count(t))
     {
         unordered_map<string,string>::iterator it = noteKeeper.find(t);
-        noteKeeper.erase((*it).first);
+        noteKeeper.erase(it->first);
     }
     else
     {

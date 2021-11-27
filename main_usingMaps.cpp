@@ -12,6 +12,8 @@ public:
 
     unordered_set<string> dict;
 
+    void addToDictionary(string s);
+
     bool checkSpell(const unordered_set<string> &dictionary, const string &word);
     vector<string> spellCheck(const string str, const unordered_set<string> &dictionary);
     void checkString(string *temp,unordered_set<string> &dictionary);
@@ -38,6 +40,13 @@ Dictionary::~Dictionary(){
     dict.clear();
 }
 
+void Dictionary::addToDictionary(string s)
+{
+    ofstream outfile;
+    outfile.open("dictionary.txt", ios_base::app); // append instead of overwrite
+    outfile << s;
+    return;
+}
 
 bool Dictionary::checkSpell(const unordered_set<string> &dictionary, const string &word)
 {
@@ -81,6 +90,15 @@ void Dictionary::checkString(string *temp,unordered_set<string> &dictionary)
                 }
                 else {
                     dictionary.insert(*it);
+                    string choice = "";
+                    do
+                    {
+                        cout << "Save it to dictionary.txt?(Y/N)" << endl;
+                        cin >> choice;
+                        if (choice == "Y" || "y")
+                            addToDictionary(*it);
+
+                    } while (choice != "Y" || "y" || "N" || "n");
                     break;
                 }
             } while (!checkSpell(dict,corrected));
@@ -101,6 +119,8 @@ public:
     void modify(string t);                 // Modify the element
     void deleteNote(string t);             // Delete string the element
     void add(const string& t,const string& d);
+    void loadFile();
+    void saveFile();
 };
 
 bool PersonalNoteKeeper::empty() const		// is list empty?
@@ -178,16 +198,113 @@ void PersonalNoteKeeper::deleteNote(string t){
     return;
 }
 
-void printChoices(){
-    cout<<"Enter your choice please:\n";
-    cout<<"1 : Add a new Note\n";
-    cout<<"2 : Search the Note\n";
-    cout<<"3 : Delete string the Note\n";
-    cout<<"4 : Modify the Note\n";
-    cout<<"5 : Travese string the Notes\n";
-    cout<<"6 : Exit the Note keeper\n";
+void PersonalNoteKeeper::loadFile(){
+    string choice = "";
+    cout << "File Name (.csv only): ";
+        getline(cin >> ws, choice);
+    if (choice.find(".csv") == string::npos)
+        choice = choice + ".csv";
+    if (!fopen(choice.c_str(), "r"))
+    {
+        cout << "No File named: " << choice << ", Please restart the steps!!" << endl;
+        return;
+    }
+    cout << "Loaded" << endl;
+
+    do
+    {
+        if (empty())
+        {
+            break;
+        }
+        cout<<"Do you want to append the notes to old one or load as a new file(Y/N): ";
+        string load;
+        getline(cin>>ws, load);
+        if (choice == "Y" || "y" && choice != "N" || "n")
+        {
+            break;
+        }
+        else if(choice == "N" || "n")
+        {
+            noteKeeper.clear();
+        }
+    } while (choice != "Y" || "y" || "N" || "n");
+
+    ifstream myfile;
+    myfile.open(choice);
+    string line;
+    if (myfile.is_open())
+    {
+        getline(myfile, line);
+        line = "";
+        while (!myfile.eof())
+        {
+            getline(myfile, line);
+            string tag, data;
+            tag = line.substr(0, line.find(","));
+            data = line.substr(line.find(",") + 1, line.length());
+            add(tag, data);
+        }
+        myfile.close();
+    }
+    return;
 }
 
+void PersonalNoteKeeper::saveFile(){
+    string choice = "";
+    do
+    {
+        if (empty())
+        {
+            cout << "Empty Notes nothing to Save, Exiting" << endl;
+            return;
+        }
+        cout << "Do you want to save the file?(Y/N): ";
+        getline(cin>>ws, choice);
+        if(choice == "N" || "n")
+        {
+            cout << "Exiting,\nThank you" << endl;
+            return;
+        }
+        else if (choice == "Y" || "y")
+        {
+            cout<<choice<<endl;
+            ofstream myfile;
+            cout << "Enter file name to be saved as: ";
+            string name;
+            getline(cin >> ws, name);
+            name = name + ".csv";
+            myfile.open(name, ios::in | ios::app);
+            myfile << "Tag,Data\n";
+            
+            unordered_map<string,string>::iterator it = noteKeeper.begin();
+
+            cout << "saving.." << endl;
+
+            while ((it)!=noteKeeper.end() && !empty())
+            {
+                myfile << (*it).first << "," << (*it).second << "\n";
+                ++it;
+            }
+            cout << "Done! Thank you" << endl;
+            myfile.close();
+            return;
+        }
+    } while (choice != "Y" || "y" || "N" || "n");
+    return;
+}
+
+void printChoices()
+{
+    cout << "Enter your choice please:\n";
+    cout << "1 : Add a new Note\n";
+    cout << "2 : Search the Note\n";
+    cout << "3 : Delete the Note\n";
+    cout << "4 : Modify the Note\n";
+    cout << "5 : Travese the Notes\n";
+    cout << "6 : Load previous Notes File\n";
+    cout << "7 : Exit the Note keeper\n";
+}
 int main(){
     
     PersonalNoteKeeper pNotesKeeper;
@@ -233,9 +350,16 @@ int main(){
             case 5:{
                 pNotesKeeper.traverse();
                 break;}
-            case 6:{
-                cout<<"Exiting";
-                break;}
+            case 6:
+            {
+                pNotesKeeper.loadFile();
+                break;
+            }
+            case 7:
+            {
+                pNotesKeeper.saveFile();
+                break;
+            }
             default:{
                 cout<<"Not a valid entry!\n";
                 break;}

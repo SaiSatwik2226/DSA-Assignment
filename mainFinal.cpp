@@ -11,8 +11,8 @@ using namespace std;
 class Dictionary
 {
 public:
-    Dictionary();       
-    ~Dictionary();      
+    Dictionary();
+    ~Dictionary();
 
     unordered_set<string> dict;
 
@@ -25,15 +25,15 @@ public:
 
 Dictionary::Dictionary()
 {
-    ifstream in;                //Input stream class to operate on files
-    in.open("dictionary.txt");  //opens the file provided in the argument
+    ifstream in;               //Input stream class to operate on files
+    in.open("dictionary.txt"); //opens the file provided in the argument
     string line;
     vector<string> myvector;
-    if (in.is_open())           //checking if the file is open
+    if (in.is_open()) //checking if the file is open
     {
-        while (!in.eof())       //iterates till the 'end of file' is reached
+        while (!in.eof()) //iterates till the 'end of file' is reached
         {
-            getline(in, line);  //extracts characters from user and stores them
+            getline(in, line); //extracts characters from user and stores them
             myvector.push_back(line);
         }
         in.close();
@@ -49,14 +49,15 @@ Dictionary::~Dictionary()
 void Dictionary::addToDictionary(string s)
 {
     ofstream outfile;
-    outfile.open("dictionary.txt", ios_base::app);  // append instead of overwrite
-    outfile << "\n"<<s;
+    outfile.open("dictionary.txt", ios_base::app); // append instead of overwrite
+    outfile << "\n"
+            << s;
     return;
 }
 
 bool Dictionary::checkSpell(const unordered_set<string> &dictionary, const string &word)
 {
-    return dictionary.count(word) != 0;  //checking if the word has occured atleast once in the dictionaty provided
+    return dictionary.count(word) != 0; //checking if the word has occured atleast once in the dictionaty provided
 }
 
 vector<string> Dictionary::spellCheck(const string str, const unordered_set<string> &dictionary)
@@ -69,7 +70,7 @@ vector<string> Dictionary::spellCheck(const string str, const unordered_set<stri
         if (!checkSpell(dictionary, word))
         {
             // cout << word << endl;
-            wrong_words.push_back(word);  // if the word isn't found, then it's added to wrong_words vector
+            wrong_words.push_back(word); // if the word isn't found, then it's added to wrong_words vector
         }
     }
     return wrong_words;
@@ -93,26 +94,26 @@ void Dictionary::checkString(string *temp, unordered_set<string> &dictionary)
                 cin >> in;
                 if (in == 1)
                 {
-                    cin >> corrected;   //if chose to replace, take input from user
+                    cin >> corrected; //if chose to replace, take input from user
                 }
                 else
                 {
-                    dictionary.insert(*it);   // else add that to our dictionary
+                    dictionary.insert(*it); // else add that to our dictionary
                     string choice = "";
                     do
                     {
                         cout << "Save it to dictionary.txt?(Y/N)" << endl;
                         cin >> choice;
-                        if (choice == "Y" || choice== "y")
+                        if (choice == "Y" || choice == "y")
                         {
                             addToDictionary(*it);
                             break;
-                            }
-                        else if(choice == "N"|| choice=="n")
+                        }
+                        else if (choice == "N" || choice == "n")
                         {
                             break;
                         }
-                    } while (choice != "Y" || choice!= "y" || choice!= "N" || choice!= "n");
+                    } while (choice != "Y" || choice != "y" || choice != "N" || choice != "n");
                     break;
                 }
             } while (!checkSpell(dict, corrected));
@@ -399,24 +400,24 @@ void DoubleLinkedList<E>::saveFile()
             return;
         }
         cout << "Do you want to save the file?(Y/N): ";
-        getline(cin>>ws, choice);
-        if(choice == "N" || choice=="n")
+        getline(cin >> ws, choice);
+        if (choice == "N" || choice == "n")
         {
             cout << "Exiting,\nThank you" << endl;
             return;
         }
-        else if (choice == "Y" || choice=="y")
+        else if (choice == "Y" || choice == "y")
         {
-            cout<<choice<<endl;
+            cout << choice << endl;
             ofstream myfile;
             cout << "Enter file name to be saved as: ";
             string name;
             getline(cin >> ws, name);
             name = name + ".csv";
-            myfile.open(name, ios::in | ios::trunc);  //open for input operations as well as for appending at eof
+            myfile.open(name, ios::in | ios::trunc); //open for input operations as well as for appending at eof
             myfile << "Tag,Data\n";
             DNode<E> *temp = header;
-            
+
             cout << "saving.." << endl;
 
             while (temp != NULL && !empty())
@@ -428,7 +429,7 @@ void DoubleLinkedList<E>::saveFile()
             myfile.close();
             return;
         }
-    } while (choice != "Y" || choice!= "y" ||choice!= "N" || choice!= "n");
+    } while (choice != "Y" || choice != "y" || choice != "N" || choice != "n");
     return;
 }
 
@@ -437,29 +438,29 @@ void DoubleLinkedList<E>::loadFile()
 {
     string choice = "";
     cout << "File Name (.csv only): ";
-        getline(cin >> ws, choice);
-    if (choice.find(".csv") == string::npos)  //checks if the user has given .csv extension, if not adds it
+    getline(cin >> ws, choice);
+    if (choice.find(".csv") == string::npos) //checks if the user has given .csv extension, if not adds it
         choice = choice + ".csv";
-    if (!fopen(choice.c_str(), "r"))          //checks if the file is open or not
+    if (!fopen(choice.c_str(), "r")) //checks if the file is open or not
     {
         cout << "No File named: " << choice << ", Please restart the steps!!" << endl;
         return;
     }
     cout << "Loaded" << endl;
-    string load="";
+    string load = "";
     do
     {
         if (empty())
         {
             break;
         }
-        cout<<"Do you want to append the notes to old one or load as a new file(Y/N): ";
-        cin>>load;
-        if (load == "Y" || load== "y")
+        cout << "Do you want to append the notes to old one or load as a new file(Y/N): ";
+        cin >> load;
+        if (load == "Y" || load == "y")
         {
             break;
         }
-        else if(load == "N" || load== "n")
+        else if (load == "N" || load == "n")
         {
             while (!(empty()))
             {
@@ -467,8 +468,8 @@ void DoubleLinkedList<E>::loadFile()
             }
             break;
         }
-    } while (load != "Y" || load!="y" || load!= "N" || load!= "n");
-    
+    } while (load != "Y" || load != "y" || load != "N" || load != "n");
+
     ifstream myfile;
     myfile.open(choice);
     string line;

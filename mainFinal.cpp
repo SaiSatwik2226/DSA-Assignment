@@ -104,8 +104,14 @@ void Dictionary::checkString(string *temp, unordered_set<string> &dictionary)
                         cout << "Save it to dictionary.txt?(Y/N)" << endl;
                         cin >> choice;
                         if (choice == "Y" || "y")
+                        {
                             addToDictionary(*it);
-
+                            break;
+                            }
+                        else if(choice == "N"||"n")
+                        {
+                            break;
+                        }
                     } while (choice != "Y" || "y" || "N" || "n");
                     break;
                 }
@@ -460,6 +466,7 @@ void DoubleLinkedList<E>::loadFile()
             {
                 removeFront();
             }
+            break;
         }
     } while (choice != "Y" || "y" || "N" || "n");
 

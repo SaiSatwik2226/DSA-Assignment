@@ -8,14 +8,21 @@
 
 ### Functionalities:
 
-Add, Search, Modify, Delete
+***Functions*** |
+------------|
+Add         |
+Search      |
+Modify      |
+Delete      |
+Traverse    |
+Spell check |
+Save Notes  |
+Load Notes  |
+Append new words to dictionary |
 
-Spell Check
 
-
-
-AKHILESH GOWRISETTY
-
-ANANTHA SAI SATWIK VYSYARAJU
-
-SAI PRASOONA
+***Team Members***|
+----------------|
+ANANTHA SAI SATWIK VYSYARAJU|
+AKHILESH GOWRISETTY|
+SAI PRASOONA|

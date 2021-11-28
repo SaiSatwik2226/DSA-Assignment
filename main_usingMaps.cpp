@@ -121,9 +121,9 @@ public:
     unordered_map<string,string> noteKeeper;
     bool empty() const;				    // is list empty?
     void traverse();                    // traversstring the list
-    void search(string t);                 // Search the element
-    void modify(string t);                 // Modify the element
-    void deleteNote(string t);             // Delete string the element
+    void search();                 // Search the element
+    void modify();                 // Modify the element
+    void deleteNote();             // Delete string the element
     void add(const string& t,const string& d);
     void loadFile();
     void saveFile();
@@ -140,6 +140,11 @@ void PersonalNoteKeeper::add(const string& t, const string& d)
 }
 
 void PersonalNoteKeeper::traverse(){
+    if (empty())
+    {
+        cout << "The Notes is Empty! Please Add few" << endl;
+        return;
+    }
     unordered_map<string,string>::iterator it = noteKeeper.begin();
     for (; it != noteKeeper.end() ; ++it)
     {
@@ -148,7 +153,15 @@ void PersonalNoteKeeper::traverse(){
     return;
 }
 
-void PersonalNoteKeeper::search(string t){
+void PersonalNoteKeeper::search(){
+    if (empty())
+    {
+        cout << "The Notes is Empty!" << endl;
+        return;
+    }
+    string t;
+    cout<<"Enter the tag please:\n";
+    getline(cin >> ws, t, '\n');
     if(noteKeeper.count(t)){
         unordered_map<string,string>::iterator it = noteKeeper.find(t);
         cout<<"Tag: "<<it->first<<"\t"<<"Data: "<<it->second<<endl;
@@ -156,15 +169,24 @@ void PersonalNoteKeeper::search(string t){
     else{
         cout<<"Element with that tag not found!"<<endl;
     }
+    return;
 }
 
-void PersonalNoteKeeper::modify(string t){
+void PersonalNoteKeeper::modify(){
+    if (empty())
+    {
+        cout << "The Notes is Empty!" << endl;
+        return;
+    }
+    string t;
+    cout<<"Enter the tag please:\n";
+    getline(cin >> ws, t, '\n');
     Dictionary d;
     if(noteKeeper.count(t))
     {
         unordered_map<string,string>::iterator it = noteKeeper.find(t);
         cout<<"What do you want to modify?\n";
-        cout<<"1.Tag\n2.Data";
+        cout<<"1.Tag\n2.Data"<<endl;
         int option=0;
         cin>>option;
         string update;
@@ -190,7 +212,15 @@ void PersonalNoteKeeper::modify(string t){
     }    
 }
 
-void PersonalNoteKeeper::deleteNote(string t){
+void PersonalNoteKeeper::deleteNote(){
+    if (empty())
+    {
+        cout << "The Notes is Empty!" << endl;
+        return;
+    }
+    string t;
+    cout<<"Enter the tag please:\n";
+    getline(cin >> ws, t, '\n');
     if (noteKeeper.count(t))
     {
         unordered_map<string,string>::iterator it = noteKeeper.find(t);
@@ -335,24 +365,15 @@ int main(){
                 break;
             }
             case 2:{
-                string tag;
-                cout<<"Enter the tag please:\n";
-                getline(cin >> ws, tag, '\n');
-                pNotesKeeper.search(tag);
+                pNotesKeeper.search();
                 break;
             }
             case 3:{
-                string tag;
-                cout<<"Enter the tag please:\n";
-                getline(cin >> ws, tag, '\n');
-                pNotesKeeper.deleteNote(tag);
+                pNotesKeeper.deleteNote();
                 break;
             }
             case 4:{
-                string tag;
-                cout<<"Enter the tag please:\n";
-                getline(cin >> ws, tag, '\n');
-                pNotesKeeper.modify(tag);
+                pNotesKeeper.modify();
                 break;}
             case 5:{
                 pNotesKeeper.traverse();

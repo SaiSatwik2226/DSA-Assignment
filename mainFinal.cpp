@@ -436,7 +436,8 @@ void DoubleLinkedList<E>::saveFile()
 
             while (temp != NULL && !empty())
             {
-                myfile << temp->tag << "," << temp->data << "\n";
+                myfile<<endl;
+                myfile << temp->tag << "," << temp->data;
                 temp = temp->next;
             }
             cout << "Done! Thank you" << endl;
@@ -491,6 +492,8 @@ void DoubleLinkedList<E>::loadFile()
     {
         getline(myfile, line);
         line = "";
+        getline(myfile, line);
+        line = "";
         while (!myfile.eof())
         {
             getline(myfile, line);
@@ -513,7 +516,8 @@ void printChoices()
     cout << "4 : Modify the Note\n";
     cout << "5 : Travese the Notes\n";
     cout << "6 : Load previous Notes File\n";
-    cout << "7 : Exit the Note keeper\n";
+    cout << "7 : Delete All\n";
+    cout << "8 : Exit the Note keeper\n";
 }
 
 int main()
@@ -523,7 +527,7 @@ int main()
     Dictionary d;
 
     int choice = 0;
-    while (choice != 7)
+    while (choice != 8)
     {
         printChoices();
         cin >> choice;
@@ -572,6 +576,15 @@ int main()
             break;
         }
         case 7:
+        {
+            while (!(notesKeeper.empty()))
+            {
+                notesKeeper.removeFront();
+            }
+            cout << "Entire Notes has been Deleted!!" << endl;
+            break;
+        }
+        case 8:
         {
             notesKeeper.saveFile();
             exit(0);

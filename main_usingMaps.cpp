@@ -288,6 +288,8 @@ void PersonalNoteKeeper::loadFile()
     {
         getline(myfile, line);
         line = "";
+        getline(myfile, line);
+        line = "";
         while (!myfile.eof())
         {
             getline(myfile, line);
@@ -337,7 +339,8 @@ void PersonalNoteKeeper::saveFile()
 
             while ((it) != noteKeeper.end() && !empty())
             {
-                myfile << (*it).first << "," << (*it).second << "\n";
+                myfile<<endl;
+                myfile << (*it).first << "," << (*it).second;
                 ++it;
             }
             cout << "Done! Thank you" << endl;

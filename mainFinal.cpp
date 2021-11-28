@@ -155,9 +155,9 @@ public:
 
     void add(DNode<E> *v, const E &t, const E &d); // insert new node before v
     void remove(DNode<E> *v);                      // remove node v
-    DNode<E> *search(E t);                         // Search the element
-    void modify(E t);                              // Modify the element
-    void deleteNote(E t);                          // Delete the element
+    DNode<E> *search();                         // Search the element
+    void modify();                              // Modify the element
+    void deleteNote();                          // Delete the element
     void saveFile();
     void loadFile();
 
@@ -302,7 +302,7 @@ void DoubleLinkedList<E>::traverse()
 }
 
 template <typename E>
-DNode<E> *DoubleLinkedList<E>::search(E t)
+DNode<E> *DoubleLinkedList<E>::search()
 {
     DNode<E> *searchElement = header;
 
@@ -311,6 +311,10 @@ DNode<E> *DoubleLinkedList<E>::search(E t)
         cout << "The Notes is Empty!" << endl;
         return NULL;
     }
+
+    string t;
+    cout << "Enter the tag please:\n";
+    getline(cin >> ws, t);
 
     while (searchElement != NULL)
     {
@@ -324,9 +328,14 @@ DNode<E> *DoubleLinkedList<E>::search(E t)
 }
 
 template <typename E>
-void DoubleLinkedList<E>::modify(E t)
+void DoubleLinkedList<E>::modify()
 {
-    DNode<E> *modifyElement = search(t);
+    if (empty())
+    {
+        cout << "The Notes is Empty!" << endl;
+        return;
+    }
+    DNode<E> *modifyElement = search();
     Dictionary d;
     if (modifyElement != NULL)
     {
@@ -370,9 +379,14 @@ void DoubleLinkedList<E>::remove(DNode<E> *s)
 }
 
 template <typename E>
-void DoubleLinkedList<E>::deleteNote(E t)
+void DoubleLinkedList<E>::deleteNote()
 {
-    DNode<E> *deleteNotes = search(t);
+    if (empty())
+    {
+        cout << "The Notes is Empty!" << endl;
+        return;
+    }
+    DNode<E> *deleteNotes = search();
 
     if (deleteNotes != NULL)
     {
@@ -509,7 +523,7 @@ int main()
     Dictionary d;
 
     int choice = 0;
-    while (choice != 6)
+    while (choice != 7)
     {
         printChoices();
         cin >> choice;
@@ -529,10 +543,7 @@ int main()
         }
         case 2:
         {
-            string t;
-            cout << "Enter the tag please:\n";
-            getline(cin >> ws, t);
-            DNode<string> *point = notesKeeper.search(t);
+            DNode<string> *point = notesKeeper.search();
             if (point != NULL)
             {
                 cout << "Tag: " << point->tag << "\t"
@@ -542,18 +553,12 @@ int main()
         }
         case 3:
         {
-            string t;
-            cout << "Enter the tag please:\n";
-            getline(cin >> ws, t);
-            notesKeeper.deleteNote(t);
+            notesKeeper.deleteNote();
             break;
         }
         case 4:
         {
-            string t;
-            cout << "Enter the tag please:\n";
-            getline(cin >> ws, t);
-            notesKeeper.modify(t);
+            notesKeeper.modify();
             break;
         }
         case 5:

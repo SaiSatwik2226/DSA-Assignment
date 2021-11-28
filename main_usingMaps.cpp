@@ -44,7 +44,7 @@ void Dictionary::addToDictionary(string s)
 {
     ofstream outfile;
     outfile.open("dictionary.txt", ios_base::app); // append instead of overwrite
-    outfile << s;
+    outfile << "\n"<<s;
     return;
 }
 
@@ -62,7 +62,7 @@ vector<string> Dictionary::spellCheck(const string str, const unordered_set<stri
     {
         if (!checkSpell(dictionary, word))
         {
-            cout<<word<<endl;
+            // cout<<word<<endl;
             wrong_words.push_back(word);
         }
     }
@@ -216,7 +216,7 @@ void PersonalNoteKeeper::loadFile(){
         return;
     }
     cout << "Loaded" << endl;
-
+     string load;
     do
     {
         if (empty())
@@ -224,18 +224,18 @@ void PersonalNoteKeeper::loadFile(){
             break;
         }
         cout<<"Do you want to append the notes to old one or load as a new file(Y/N): ";
-        string load;
+       
         getline(cin>>ws, load);
-        if (choice == "Y" || "y" && choice != "N" || "n")
+        if (load == "Y" || load== "y" && load != "N" || load== "n")
         {
             break;
         }
-        else if(choice == "N" || "n")
+        else if(load == "N" || load== "n")
         {
             noteKeeper.clear();
             break;
         }
-    } while (choice != "Y" || "y" || "N" || "n");
+    } while (load != "Y" || load!= "y" || load!= "N" || load!="n");
 
     ifstream myfile;
     myfile.open(choice);
@@ -273,7 +273,7 @@ void PersonalNoteKeeper::saveFile(){
             cout << "Exiting,\nThank you" << endl;
             return;
         }
-        else if (choice == "Y" || "y")
+        else if (choice == "Y" || choice== "y")
         {
             cout<<choice<<endl;
             ofstream myfile;
@@ -281,7 +281,7 @@ void PersonalNoteKeeper::saveFile(){
             string name;
             getline(cin >> ws, name);
             name = name + ".csv";
-            myfile.open(name, ios::in | ios::app);
+            myfile.open(name, ios::in | ios::trunc);
             myfile << "Tag,Data\n";
             
             unordered_map<string,string>::iterator it = noteKeeper.begin();
@@ -297,7 +297,7 @@ void PersonalNoteKeeper::saveFile(){
             myfile.close();
             return;
         }
-    } while (choice != "Y" || "y" || "N" || "n");
+    } while (choice != "Y" || choice!= "y" || choice!= "N" || choice!= "n");
     return;
 }
 
@@ -319,7 +319,7 @@ int main(){
     Dictionary d;
 
     int choice = 0;
-    while(choice != 6){
+    while(choice != 7){
         printChoices();
         cin>>choice;
         switch(choice){

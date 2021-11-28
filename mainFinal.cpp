@@ -19,7 +19,7 @@ public:
     void addToDictionary(string s);
 
     bool checkSpell(const unordered_set<string> &dictionary, const string &word);
-    vector<string> spellCheck(const string str, const unordered_set<string> &dictionary);
+    unordered_set<string> spellCheck(const string str, const unordered_set<string> &dictionary);
     void checkString(string *temp, unordered_set<string> &dictionary);
 };
 
@@ -60,9 +60,9 @@ bool Dictionary::checkSpell(const unordered_set<string> &dictionary, const strin
     return dictionary.count(word) != 0; //checking if the word has occured atleast once in the dictionaty provided
 }
 
-vector<string> Dictionary::spellCheck(const string str, const unordered_set<string> &dictionary)
+unordered_set<string> Dictionary::spellCheck(const string str, const unordered_set<string> &dictionary)
 {
-    vector<string> wrong_words;
+    unordered_set<string> wrong_words;
     stringstream ss(str);
     string word;
     while (ss >> word) //extraction operator of the stringstream class
@@ -70,7 +70,7 @@ vector<string> Dictionary::spellCheck(const string str, const unordered_set<stri
         if (!checkSpell(dictionary, word))
         {
             // cout << word << endl;
-            wrong_words.push_back(word); // if the word isn't found, then it's added to wrong_words vector
+            wrong_words.insert(word); // if the word isn't found, then it's added to wrong_words vector
         }
     }
     return wrong_words;
@@ -78,8 +78,8 @@ vector<string> Dictionary::spellCheck(const string str, const unordered_set<stri
 
 void Dictionary::checkString(string *temp, unordered_set<string> &dictionary)
 {
-    vector<string> ans = spellCheck(*temp, dictionary);
-    vector<string>::iterator it;
+    unordered_set<string> ans = spellCheck(*temp, dictionary);
+    unordered_set<string>::iterator it;
     if (!ans.empty())
     {
         cout << "The Following words are wrong:" << endl;
@@ -155,9 +155,9 @@ public:
 
     void add(DNode<E> *v, const E &t, const E &d); // insert new node before v
     void remove(DNode<E> *v);                      // remove node v
-    DNode<E> *search();                            // Search the element
-    void modify();                                 // Modify the element
-    void deleteNote();                             // Delete the element
+    DNode<E> *search();                         // Search the element
+    void modify();                              // Modify the element
+    void deleteNote();                          // Delete the element
     void saveFile();
     void loadFile();
 
@@ -460,6 +460,7 @@ void DoubleLinkedList<E>::loadFile()
         cout << "No File named: " << choice << ", Please restart the steps!!" << endl;
         return;
     }
+    cout << "Loaded" << endl;
     string load = "";
     do
     {
@@ -500,7 +501,6 @@ void DoubleLinkedList<E>::loadFile()
         }
         myfile.close();
     }
-    cout << "Loaded" << endl;
     return;
 }
 
@@ -513,8 +513,7 @@ void printChoices()
     cout << "4 : Modify the Note\n";
     cout << "5 : Travese the Notes\n";
     cout << "6 : Load previous Notes File\n";
-    cout << "7 : Delete All\n";
-    cout << "8 : Exit the Note keeper\n";
+    cout << "7 : Exit the Note keeper\n";
 }
 
 int main()
@@ -524,7 +523,7 @@ int main()
     Dictionary d;
 
     int choice = 0;
-    while (choice != 8)
+    while (choice != 7)
     {
         printChoices();
         cin >> choice;
@@ -573,15 +572,6 @@ int main()
             break;
         }
         case 7:
-        {
-            while (!(notesKeeper.empty()))
-            {
-                notesKeeper.removeFront();
-            }
-            cout << "Entire Notes has been Deleted!!" << endl;
-            break;
-        }
-        case 8:
         {
             notesKeeper.saveFile();
             exit(0);

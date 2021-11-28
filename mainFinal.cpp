@@ -155,9 +155,9 @@ public:
 
     void add(DNode<E> *v, const E &t, const E &d); // insert new node before v
     void remove(DNode<E> *v);                      // remove node v
-    DNode<E> *search();                         // Search the element
-    void modify();                              // Modify the element
-    void deleteNote();                          // Delete the element
+    DNode<E> *search();                            // Search the element
+    void modify();                                 // Modify the element
+    void deleteNote();                             // Delete the element
     void saveFile();
     void loadFile();
 

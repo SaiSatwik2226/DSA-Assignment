@@ -155,9 +155,9 @@ public:
 
     void add(DNode<E> *v, const E &t, const E &d); // insert new node before v
     void remove(DNode<E> *v);                      // remove node v
-    DNode<E> *search();                         // Search the element
-    void modify();                              // Modify the element
-    void deleteNote();                          // Delete the element
+    DNode<E> *search();                            // Search the element
+    void modify();                                 // Modify the element
+    void deleteNote();                             // Delete the element
     void saveFile();
     void loadFile();
 
@@ -460,7 +460,6 @@ void DoubleLinkedList<E>::loadFile()
         cout << "No File named: " << choice << ", Please restart the steps!!" << endl;
         return;
     }
-    cout << "Loaded" << endl;
     string load = "";
     do
     {
@@ -501,6 +500,7 @@ void DoubleLinkedList<E>::loadFile()
         }
         myfile.close();
     }
+    cout << "Loaded" << endl;
     return;
 }
 
@@ -513,7 +513,8 @@ void printChoices()
     cout << "4 : Modify the Note\n";
     cout << "5 : Travese the Notes\n";
     cout << "6 : Load previous Notes File\n";
-    cout << "7 : Exit the Note keeper\n";
+    cout << "7 : Delete All\n";
+    cout << "8 : Exit the Note keeper\n";
 }
 
 int main()
@@ -523,7 +524,7 @@ int main()
     Dictionary d;
 
     int choice = 0;
-    while (choice != 7)
+    while (choice != 8)
     {
         printChoices();
         cin >> choice;
@@ -572,6 +573,15 @@ int main()
             break;
         }
         case 7:
+        {
+            while (!(notesKeeper.empty()))
+            {
+                notesKeeper.removeFront();
+            }
+            cout << "Entire Notes has been Deleted!!" << endl;
+            break;
+        }
+        case 8:
         {
             notesKeeper.saveFile();
             exit(0);

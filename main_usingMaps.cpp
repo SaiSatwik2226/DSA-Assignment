@@ -245,8 +245,7 @@ void PersonalNoteKeeper::loadFile(){
         cout << "No File named: " << choice << ", Please restart the steps!!" << endl;
         return;
     }
-    cout << "Loaded" << endl;
-     string load;
+    string load;
     do
     {
         if (empty())
@@ -277,6 +276,7 @@ void PersonalNoteKeeper::loadFile(){
         while (!myfile.eof())
         {
             getline(myfile, line);
+            cout<<line<<endl;
             string tag, data;
             tag = line.substr(0, line.find(","));
             data = line.substr(line.find(",") + 1, line.length());
@@ -284,6 +284,7 @@ void PersonalNoteKeeper::loadFile(){
         }
         myfile.close();
     }
+    cout << "Loaded" << endl;
     return;
 }
 
@@ -340,7 +341,8 @@ void printChoices()
     cout << "4 : Modify the Note\n";
     cout << "5 : Travese the Notes\n";
     cout << "6 : Load previous Notes File\n";
-    cout << "7 : Exit the Note keeper\n";
+    cout << "7 : Delete All\n";
+    cout << "8 : Exit the Note keeper\n";
 }
 int main(){
     
@@ -349,7 +351,7 @@ int main(){
     Dictionary d;
 
     int choice = 0;
-    while(choice != 7){
+    while(choice != 8){
         printChoices();
         cin>>choice;
         switch(choice){
@@ -384,6 +386,15 @@ int main(){
                 break;
             }
             case 7:
+            {
+                while (!(pNotesKeeper.empty()))
+                {
+                    pNotesKeeper.noteKeeper.clear();
+                }
+                cout << "Entire Notes has been Deleted!!" << endl;
+                break;
+            }
+            case 8:
             {
                 pNotesKeeper.saveFile();
                 break;

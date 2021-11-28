@@ -15,7 +15,7 @@ public:
     void addToDictionary(string s);
 
     bool checkSpell(const unordered_set<string> &dictionary, const string &word);
-    vector<string> spellCheck(const string str, const unordered_set<string> &dictionary);
+    unordered_set<string> spellCheck(const string str, const unordered_set<string> &dictionary);
     void checkString(string *temp,unordered_set<string> &dictionary);
 };
 
@@ -53,9 +53,9 @@ bool Dictionary::checkSpell(const unordered_set<string> &dictionary, const strin
     return dictionary.count(word) != 0;
 }
 
-vector<string> Dictionary::spellCheck(const string str, const unordered_set<string> &dictionary)
+unordered_set<string> Dictionary::spellCheck(const string str, const unordered_set<string> &dictionary)
 {
-    vector<string> wrong_words;
+    unordered_set<string> wrong_words;
     stringstream ss(str);
     string word;
     while (ss >> word)
@@ -63,7 +63,7 @@ vector<string> Dictionary::spellCheck(const string str, const unordered_set<stri
         if (!checkSpell(dictionary, word))
         {
             // cout<<word<<endl;
-            wrong_words.push_back(word);
+            wrong_words.insert(word);
         }
     }
     return wrong_words;
@@ -71,8 +71,8 @@ vector<string> Dictionary::spellCheck(const string str, const unordered_set<stri
 
 void Dictionary::checkString(string *temp,unordered_set<string> &dictionary)
 {        
-    vector<string> ans = spellCheck(*temp, dictionary);
-    vector<string>::iterator it;
+    unordered_set<string> ans = spellCheck(*temp, dictionary);
+    unordered_set<string>::iterator it;
     if(!ans.empty())
     {
         cout<<"The Following words are wrong:"<<endl;
